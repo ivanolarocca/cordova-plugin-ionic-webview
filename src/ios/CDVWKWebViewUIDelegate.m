@@ -31,6 +31,22 @@
     return self;
 }
 
+// With the UIScene lifecycle (cordova-ios 8) the window belongs to the scene delegate and
+// [UIApplication sharedApplication].delegate.window is nil, so the panels were never presented
+// and WebKit raised an exception because the completion handler was never called.
+// Present from the top-most view controller of the web view's own window instead
+// (same approach already adopted by other forks of this plugin).
+- (UIViewController*)presenterForWebView:(WKWebView*)webView
+{
+    UIViewController* presenter = webView.window.rootViewController;
+
+    while (presenter.presentedViewController) {
+        presenter = presenter.presentedViewController;
+    }
+
+    return presenter;
+}
+
 - (void)     webView:(WKWebView*)webView runJavaScriptAlertPanelWithMessage:(NSString*)message
     initiatedByFrame:(WKFrameInfo*)frame completionHandler:(void (^)(void))completionHandler
 {
@@ -48,9 +64,15 @@
 
     [alert addAction:ok];
 
-    UIViewController* rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    UIViewController* presenter = [self presenterForWebView:webView];
 
-    [rootController presentViewController:alert animated:YES completion:nil];
+    if (!presenter) {
+        // Nothing can present the panel: WebKit requires the completion handler to be called.
+        completionHandler();
+        return;
+    }
+
+    [presenter presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)     webView:(WKWebView*)webView runJavaScriptConfirmPanelWithMessage:(NSString*)message
@@ -79,9 +101,15 @@
         }];
     [alert addAction:cancel];
 
-    UIViewController* rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    UIViewController* presenter = [self presenterForWebView:webView];
 
-    [rootController presentViewController:alert animated:YES completion:nil];
+    if (!presenter) {
+        // Nothing can present the panel: WebKit requires the completion handler to be called.
+        completionHandler(NO);
+        return;
+    }
+
+    [presenter presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)      webView:(WKWebView*)webView runJavaScriptTextInputPanelWithPrompt:(NSString*)prompt
@@ -115,9 +143,15 @@
         textField.text = defaultText;
     }];
 
-    UIViewController* rootController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    UIViewController* presenter = [self presenterForWebView:webView];
 
-    [rootController presentViewController:alert animated:YES completion:nil];
+    if (!presenter) {
+        // Nothing can present the panel: WebKit requires the completion handler to be called.
+        completionHandler(nil);
+        return;
+    }
+
+    [presenter presentViewController:alert animated:YES completion:nil];
 }
 
 @end
