@@ -19,6 +19,17 @@
 
 <!-- TODO: remove beta in README.md and CONTRIBUTING.md -->
 
+> [!NOTE]
+> **Siretail patched fork.** This is a fork of [ionic-team/cordova-plugin-ionic-webview](https://github.com/ionic-team/cordova-plugin-ionic-webview) 5.0.1, whose last upstream release dates back to 2023. It adapts the plugin to **cordova-ios 8** and to the **UIScene lifecycle** that the iOS 27 SDK (Xcode 27) makes mandatory. Only the changes strictly needed for that are applied:
+>
+> - **iOS:** JavaScript `alert()`, `confirm()` and `prompt()` are presented from the web view's own window. Under the UIScene lifecycle the app delegate window is `nil`, so the dialogs were never shown and the page stayed blocked.
+>
+> Everything else is unchanged from upstream 5.0.1: plugin id, the `Ionic.WebView` JavaScript API, the `ionic://localhost` origin on iOS and the whole Android implementation. The fix does not depend on the cordova-ios version and also applies to cordova-ios 7.
+>
+> The plugin still declares `deployment-target` 11.0 in `plugin.xml`: set `deployment-target` in the app's `config.xml` (Xcode 27 requires at least 15.0).
+>
+> Install a tagged release, e.g. `cordova plugin add github:ivanolarocca/cordova-plugin-ionic-webview#v5.0.1-siretail.1`. Changes are listed in the [CHANGELOG](CHANGELOG.md).
+
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&identifier=104773211)](https://dependabot.com)
 [![npm](https://img.shields.io/npm/v/cordova-plugin-ionic-webview.svg)](https://www.npmjs.com/package/cordova-plugin-ionic-webview)
