@@ -1,3 +1,9 @@
+# [5.0.1-siretail.1](https://github.com/ivanolarocca/cordova-plugin-ionic-webview/compare/v5.0.1...v5.0.1-siretail.1) (2026-09-28)
+
+### Bug Fixes
+
+* **ios:** present JS dialogs (alert/confirm/prompt) from the web view window, required by the UIScene lifecycle of cordova-ios 8 ([35a4d77](https://github.com/ivanolarocca/cordova-plugin-ionic-webview/commit/35a4d771113a66c9cf04dccd24c6720095669514))
+
 # [5.0.1](https://github.com/ionic-team/cordova-plugin-ionic-webview/compare/v5.0.0...v5.0.1) (2023-08-29)
 
 ### Features
