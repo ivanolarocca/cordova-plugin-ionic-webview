@@ -32,8 +32,8 @@
 }
 
 // With the UIScene lifecycle (cordova-ios 8) the window belongs to the scene delegate and
-// [UIApplication sharedApplication].delegate.window is nil, so the panels were never presented
-// and WebKit raised an exception because the completion handler was never called.
+// [UIApplication sharedApplication].delegate.window is nil, so the panels were never presented:
+// the completion handler was never called and the JavaScript call never returned, blocking the page.
 // Present from the top-most view controller of the web view's own window instead
 // (same approach already adopted by other forks of this plugin).
 - (UIViewController*)presenterForWebView:(WKWebView*)webView
